@@ -227,11 +227,11 @@ LANDING
 #landing {
   background-color: rgba(115, 66, 214, 0.1)
 }
-/*
+
 header {
-   height: calc(100vh - 80px);
+  height: calc(100vh - 80px);
 }
-*/
+
 .header__container {
   width: 100%;
   max-width: 720px;

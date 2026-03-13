@@ -1,24 +1,68 @@
-import logo from './logo.svg';
-import './App.css';
+import Nav from './components/Nav.jsx'
+import Footer from './components/Footer.jsx';
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import Home from './pages/Home.jsx';
+import { books } from './data.js'
+import Books from './pages/Books.jsx';
+import BookInfo from './pages/BookInfo.jsx';
+import Cart from './pages/Cart.jsx';
+import React, { useEffect, useState } from 'react';
 
 function App() {
+  const [cart, setCart]= useState([]);
+
+  function addToCart(book) {
+   setCart([...cart, {...book, quantity:1} ])
+  }
+
+function changeQuantity(book, quantity) {
+    setCart(
+      cart.map((item) => 
+        item.id===book.id 
+      ?      
+      { ...item, 
+        quantity: +quantity,
+      } :
+        item       
+      ))
+}
+
+function removeItem(item){
+   setCart(cart.filter(book => book.id !== item.id))
+}
+
+function  numberOfItems() {
+  let counter= 0;
+  cart.forEach(item => {
+    counter += item.quantity;
+  })
+  return counter;
+}
+
+
+  useEffect(() => {
+    console.log(cart)
+  }, [cart]
+  )
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Nav numberOfItems= {numberOfItems()}/>
+        <Routes>
+          <Route path="/" exact element= {<Home />} />
+          <Route path='/books' exact element= {<Books books= {books}/>} />
+          <Route path='/books/:id' element= {<BookInfo books= {books} cart={cart} addToCart={addToCart}/>} />
+          <Route path='/cart' element= {<Cart 
+          books= { books } 
+          cart={cart} 
+          changeQuantity= {changeQuantity}
+          removeItem={removeItem}/>} />
+        </ Routes>
+      
+        <Footer />
+      </div>
+    </Router>
   );
 }
 
